@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Constructor Píxel Forge</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      color: #333;
+    }
+    #game {
+      margin-top: 20px;
+    }
+    .component {
+      margin: 10px;
+    }
+    #timer, #score, #budget {
+      font-size: 1.5em;
+      margin: 10px;
+    }
+    #result {
+      font-size: 1.8em;
+      margin-top: 20px;
+      color: #d9534f;
+      animation: pulse 1.5s infinite;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <h1>Constructor Píxel Forge</h1>
+  <p>Selecciona los mejores componentes para tu PC sin exceder el presupuesto antes de que se acabe el tiempo.</p>
+
+  <div id="game">
+    <div id="timer">Tiempo: 30s</div>
+    <div id="score">Puntuación: 0</div>
+    <div id="budget">Presupuesto: $1000</div>
+    
+    <div class="component">
+      <button onclick="selectComponent('CPU', 300, 10)" aria-label="Seleccionar CPU Core Boost por $300">CPU: Core Boost ($300 / +10)</button>
+    </div>
+    <div class="component">
+      <button onclick="selectComponent('GPU', 400, 15)" aria-label="Seleccionar GPU Pixel Blaster por $400">GPU: Pixel Blaster ($400 / +15)</button>
+    </div>
+    <div class="component">
+      <button onclick="selectComponent('RAM', 100, 5)" aria-label="Seleccionar RAM Speedy por $100">RAM: Speedy ($100 / +5)</button>
+    </div>
+    <div class="component">
+      <button onclick="selectComponent('SSD', 200, 20)" aria-label="Seleccionar SSD UltraDrive por $200">SSD: UltraDrive ($200 / +20)</button>
+    </div>
+  </div>
+
+  <div id="result"></div>
+  <button id="restartButton" style="display: none; margin-top: 20px;" onclick="restartGame()">Reiniciar Juego</button>
+
+  <script>
+    let timeLeft = 30;
+    let score = 0;
+    let budget = 1000;
+    const timerElement = document.getElementById('timer');
+    const scoreElement = document.getElementById('score');
+    const budgetElement = document.getElementById('budget');
+    const resultElement = document.getElementById('result');
+    const restartButton = document.getElementById('restartButton');
+
+    // Countdown Timer
+    const timer = setInterval(() => {
+      if (timeLeft > 0) {
+        timeLeft--;
+        timerElement.innerText = `Tiempo: ${timeLeft}s`;
+      } else {
+        clearInterval(timer);
+        endGame();
+      }
+    }, 1000);
+
+    // Function to handle component selection
+    function selectComponent(name, cost, points) {
+      const button = event.target;
+      if (budget >= cost) {
+        score += points;
+        budget -= cost;
+        scoreElement.innerText = `Puntuación: ${score}`;
+        budgetElement.innerText = `Presupuesto: $${budget}`;
+        button.disabled = true; // Disable the button after selection
+        button.style.backgroundColor = '#ccc'; // Change button color
+      } else {
+        alert(`No tienes suficiente presupuesto para seleccionar ${name}`);
+      }
+    }
+
+    // End the game and show result
+    function endGame() {
+      document.getElementById('game').style.display = 'none';
+      resultElement.innerText = `¡Juego terminado! Tu puntuación final es: ${score}`;
+      restartButton.style.display = 'block'; // Show restart button
+    }
+
+    // Restart the game
+    function restartGame() {
+      location.reload(); // Reload the page to reset the game
+    }
+  </script>
+</body>
+</html>
